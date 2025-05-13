@@ -1,35 +1,37 @@
+import express from 'express';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
-import express from 'express';
+
 const app = express();
 const PORT = 8002;
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 function registrarLog(nomeAluno) {
+    const id = uuidv4();
     const dataHora = new Date().toISOString();
-    const mensagem = `${dataHora} - ${nomeAluno}`;
-    fs.appendFile('./logs.txt', `${uuidv4()} - ${mensagem}\n`, (err) => {
-        if (err) {
-            console.error('Erro ao registrar log:', err);
-        } else {
-            console.log('Log registrado com sucesso.');
-        }
-    });
+    const log = `${id} - ${dataHora} - ${nomeAluno}\n`;
+
+    fs.appendFileSync('logs.txt', log);
+    return id;
 }
 
-app.use(express.json());
+app.post('/logs', (req, res) => {
+    const { nome } = req.body;
 
-app.get('/logs', (req, res) => {
-    fs.readFile('./logs.txt', 'utf8', (err, data) => {
-        if (err) {
-            console.error('Erro ao ler o arquivo de logs:', err);
-            res.status(500).send('Erro ao ler os logs.');
-        } else {
-            res.send(`<pre>${data}</pre>`);
-        }
+    if (!nome) {
+        return res.status(400).json({ erro: 'Nome é obrigatório' });
+    }
+
+    const id = registrarLog(nome);
+
+    return res.status(201).json({
+        mensagem: 'Log registrado com sucesso',
+        id
     });
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor rodando`);
-    registrarLog('');
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
