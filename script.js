@@ -31,5 +31,5 @@ app.get('/logs', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando`);
-    registrarLog('Bruno');
+    registrarLog('');
 });
