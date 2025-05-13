@@ -1,5 +1,8 @@
-const fs = require('fs');
-const { v4: uuidv4 } = require('uuid');
+import express from 'express';
+const app = express();
+const PORT = 8002;
+import fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
 
 function registrarLog(nomeAluno) {
     const dataHora = new Date().toISOString();
@@ -12,5 +15,7 @@ function registrarLog(nomeAluno) {
         }
     });
 }
-
-registrarLog('teste');
+app.listen(PORT, () => {
+    console.log(`Servidor rodando`);
+    registrarLog('João da Silva');
+});

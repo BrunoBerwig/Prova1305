@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "express": "^5.1.0",
     "node": "^24.0.1",
     "uuid": "^11.1.0"
   }
